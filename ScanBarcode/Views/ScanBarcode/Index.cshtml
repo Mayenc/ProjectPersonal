@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/quagga.min.js"></script>
+    <style>
+        /* In order to place the tracking correctly */
+        canvas.drawing, canvas.drawingBuffer {
+            position: absolute;
+            left: 20%;
+            top: 10%;
+        }
+    </style>
+</head>
+
+<body>
+    <form method="post">
+        <section>
+            <div class="input-field">
+                <label for="isbn_input">EAN:</label>
+                <input id="isbn_input" name="barcode" class="isbn" type="text" />
+                <button type="button" id="btnScan" class="icon-barcode button scan">Scan</button>
+                <button type="button" id="btnStop" class="icon-barcode button scan">Stop</button>
+                <button type="button" class="btnDetail icon-barcode button scan">DetailItem</button> @*asp-action="SearchByBarcode"*@
+            </div>
+            <div style="margin-top: 50px;">
+                <div id="scanner-container"></div>
+            </div>
+        </section>
+    </form>
+    <script>
+        var _scannerIsRunning = false;
+
+        function startScanner() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector('#scanner-container'),
+                    constraints: {
+                        width: 480,
+                        height: 320,
+                        facingMode: "environment"
+                    },
+                },
+                decoder: {
+                    readers: [
+                        "code_128_reader"
+                    ],
+                    debug: {
+                        showCanvas: true,
+                        showPatches: true,
+                        showFoundPatches: true,
+                        showSkeleton: true,
+                        showLabels: true,
+                        showPatchLabels: true,
+                        showRemainingPatchLabels: true,
+                        boxFromPatches: {
+                            showTransformed: true,
+                            showTransformedBox: true,
+                            showBB: true
+                        }
+                    }
+                },
+
+            }, function (err) {
+                if (err) {
+                    console.log(err);
+                    return
+                }
+
+                console.log("Initialization finished. Ready to start");
+                Quagga.start();
+
+                // Set flag to is running
+                _scannerIsRunning = true;
+            });
+
+            Quagga.onProcessed(function (result) {
+                var drawingCtx = Quagga.canvas.ctx.overlay;
+                var drawingCanvas = Quagga.canvas.dom.overlay;
+                if (result) {
+                    if (result.boxes) {
+                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                        result.boxes.filter(function (box) {
+                            return box !== result.box;
+                        }).forEach(function (box) {
+                            Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: "green", lineWidth: 2 });
+                        });
+                    }
+
+                    if (result.box) {
+                        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: "#00F", lineWidth: 2 });
+                    }
+
+                    if (result.codeResult && result.codeResult.code) {
+                        Quagga.ImageDebug.drawPath(result.line, { x: 'x', y: 'y' }, drawingCtx, { color: 'red', lineWidth: 3 });
+                    }
+                }
+            });
+
+
+            Quagga.onDetected(function (result) {
+                document.querySelector('input.isbn').value = result.codeResult.code;
+                //console.log("Barcode detected and processed : [" + result.codeResult.code + "]", result);
+                if ($('.isbn').val() != ''){
+                    Quagga.stop();
+                }
+            });
+        }
+
+
+        // Start scanner
+        $('#btnScan').click(function(){
+            startScanner();
+        })
+        //stop scanner
+        $('#btnStop').click(function () {
+            Quagga.stop();
+            _scannerIsRunning = false;
+        })
+        $(function(){
+            $('.btnDetail').click(function(){
+                debugger
+                var valueBarcode = $('#isbn_input').val();
+                var model = new Object();
+                model.barcode = valueBarcode;
+                var token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidHJ1Y3RkIiwianRpIjoiOWVhMzg3MmUtMzA2Ni00Y2NiLWE4OWEtOTg5YjA4ZjhmN2ViIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIkFkbWluIiwiU3RvcmUiXSwiZXhwIjoxNjg4NzA4NTMyLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAifQ.9cz5kLDRrH7Bs_KcMj7rlZUTUtaq6-DCK8fR3SGeo5M'
+                $.ajaxSetup({
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                $.ajax({
+                    url: "https://localhost:7047/api/InforStore/searchByBarcode",
+                    type: 'GET',
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify(model),
+                    //headers: {
+                    //    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoidHJ1Y3RkIiwianRpIjoiZWIwMzVjNTAtYWFhOS00MDcwLTgyYTctNDc3YzM4NWJlYWI0IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIkFkbWluIiwiU3RvcmUiXSwiZXhwIjoxNjg4NzA3OTIwLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDAiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjQyMDAifQ.AS_Zp2gmT_Z4KDNGTe8SgsLkCjJzBA - 0rCRBSpuitbY'
+                    //},
+                    success: function (result) {
+                        debugger
+                        alert(result);
+                    },
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
