@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "2sXUFY91ZlyBTFiqqhKSu0Xah9Y2MOiEBMrmfaEKFrlHFKvlzg1C1DYlyc74BnOx7r3hhclneH5mtQRz6OVsMg==",
+  "dgSpecHash": "Lj4k3UB/vw3GIMjN0SCww4UjBnZV6fZxbzyXKdF+o51Ldtcg3HEVa+QB2IuQ5YSoQbxhGrIqdQ9VC6ONuiRhMQ==",
   "success": true,
-  "projectFilePath": "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\ScanBarcode.csproj",
+  "projectFilePath": "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\ScanBarcode.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\tructd\\.nuget\\packages\\humanizer.core\\2.8.26\\humanizer.core.2.8.26.nupkg.sha512",
     "C:\\Users\\tructd\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.0\\microsoft.aspnetcore.authentication.jwtbearer.6.0.0.nupkg.sha512",

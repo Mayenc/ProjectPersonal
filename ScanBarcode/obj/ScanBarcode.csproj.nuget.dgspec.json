@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\ScanBarcode.csproj": {}
+    "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\ScanBarcode.csproj": {}
   },
   "projects": {
-    "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\ScanBarcode.csproj": {
+    "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\ScanBarcode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\ScanBarcode.csproj",
+        "projectUniqueName": "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\ScanBarcode.csproj",
         "projectName": "ScanBarcode",
-        "projectPath": "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\ScanBarcode.csproj",
+        "projectPath": "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\ScanBarcode.csproj",
         "packagesPath": "C:\\Users\\tructd\\.nuget\\packages\\",
-        "outputPath": "D:\\1.Routine\\ScanBarcode\\ScanBarcode\\obj\\",
+        "outputPath": "D:\\GitPersonal\\ProjectPersonal\\ScanBarcode\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
